@@ -2,15 +2,23 @@
 
 Execução via terminal:
 
-> python {extrator} {/diretório_com_imagens} {prametros} {nome_do_arquivo_resultante}
+> **python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}} {{{nome_do_arquivo_resultante}}}**
 
-# Dependências:
+O arquivo resultante por padrão estará no formato .arff.
 
-- Numpy
-- Nrrd
+## Dependências:
+
+- logging
+- os
+- sys
+- six
+- gc
+- radiomics
+- nrrd
+- numpy
+- pandas
 - SimpleITK
-- Six
-- Pandas
-- PyRadiomics
+
+### Dependências específicas:
 
 v2.1 - Necessária a criação de diretório ***C:/ResultsFromPyrad/*** para armazenamento dos arquivos .nrrd com as características extraídas.
