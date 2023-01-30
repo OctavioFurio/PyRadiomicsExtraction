@@ -1,0 +1,42 @@
+# Parametros de teste
+
+# Totalizam 100 extratores, com 22 características diagnósticas
+
+setting:
+  binWidth: 10
+  label: 200
+  interpolator: 'sitkBSpline' 
+  resampledPixelSpacing:
+  correctMask: True
+  distances: [1,2]
+  symmetricalGLCM: True
+
+featureClass:
+  shape: Variância, Energia, Entropia & Homogeneidade
+  firstorder:
+  glcm: # Extrator depredado não foi selecionado
+    - 'Autocorrelation'
+    - 'JointAverage'
+    - 'ClusterProminence'
+    - 'ClusterShade'
+    - 'ClusterTendency'
+    - 'Contrast'
+    - 'Correlation'
+    - 'DifferenceAverage'
+    - 'DifferenceEntropy'
+    - 'DifferenceVariance'
+    - 'JointEnergy'
+    - 'JointEntropy'
+    - 'Imc1'
+    - 'Imc2'
+    - 'Idm'
+    - 'Idmn'
+    - 'Id'
+    - 'Idn'
+    - 'InverseVariance'
+    - 'MaximumProbability'
+    - 'SumEntropy'
+    - 'SumSquares'
+  glrlm:
+  glszm:
+  gldm:
