@@ -2,7 +2,7 @@
 
 Execução via terminal:
 
-> python {extrator} {/diretório_com_imagens} {Arquivo_de_parametros} {nome_do_arquivo_resultante}
+> python {extrator} {/diretório_com_imagens} {prametros} {nome_do_arquivo_resultante}
 
 # Dependências:
 
