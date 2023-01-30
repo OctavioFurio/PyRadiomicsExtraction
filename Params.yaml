@@ -12,7 +12,7 @@ setting:
   symmetricalGLCM: True
 
 featureClass:
-  shape: Variância, Energia, Entropia & Homogeneidade
+  shape: # Variância, Energia, Entropia & Homogeneidade
   firstorder:
   glcm: # Extrator depredado não foi selecionado
     - 'Autocorrelation'
