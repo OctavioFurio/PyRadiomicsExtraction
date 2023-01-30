@@ -6,11 +6,11 @@ Execução via terminal:
 
 # Dependências:
 
-> Numpy
-> Nrrd
-> SimpleITK
-> Six
-> Pandas
-> PyRadiomics
+- Numpy
+- Nrrd
+- SimpleITK
+- Six
+- Pandas
+- PyRadiomics
 
 v2.1 - Necessária a criação de diretório ***C:/ResultsFromPyrad/*** para armazenamento dos arquivos .nrrd com as características extraídas.
