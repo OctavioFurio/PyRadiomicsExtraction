@@ -2,9 +2,11 @@
 
 Execução via terminal:
 
-> **python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}} {{{nome_do_arquivo_resultante}}}**
+> **python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}}**
 
-O arquivo resultante por padrão estará no formato .arff.
+O arquivo resultante por padrão estará no formato .CSV, e será salvo no diretório onde o extrator for executado, com padrão de nome: 
+
+> {{{/diretório_com_imagens}}}_features.csv
 
 ## Dependências:
 
