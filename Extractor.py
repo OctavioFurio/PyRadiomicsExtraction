@@ -28,9 +28,7 @@ def main():
 
     FileSave(Diretorio, Parametros, Log, count)
 
-    print("\n\tConteudo do arquivo .csv resultante:\n")
-
-    print(open(Log, "r").read())
+    print("\n\tArquivo .csv resultante: " + Log)
 
 
 
