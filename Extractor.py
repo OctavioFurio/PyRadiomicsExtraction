@@ -1,5 +1,5 @@
 
-# V2.3 - Extração radiomica de imagens .tif
+# V2.4 - Extração radiomica de imagens .tif
 # 31.01.23
 
 import os
@@ -12,7 +12,7 @@ import radiomics
 from radiomics import featureextractor
 
 def main():
-    Diretorio, Parametros, Log = sys.argv[1], sys.argv[2], sys.argv[3]
+    Diretorio, Parametros, Log = sys.argv[1], sys.argv[2], sys.argv[1] + "_Features.csv"
     print("\n\tDiretorio selecionado: %s\n\tParametros: %s\n\tResultados armazenados em: %s" % (Diretorio, Parametros, Log))
     
     count = 0
@@ -23,34 +23,22 @@ def main():
     print('\n\tArquivos encontrados no diretorio: ', count)
     print("\n\tExtraindo caracteristicas...\n")
 
+    # Um menor valor trará mais informações durante a execução
     radiomics.setVerbosity(30)
 
     FileSave(Diretorio, Parametros, Log, count)
 
-    print("\n\tConteudo do arquivo .arff resultante:\n")
+    print("\n\tConteudo do arquivo .csv resultante:\n")
 
     print(open(Log, "r").read())
 
 
 
-#   Escrita no arquivo .arff a ser gerado.
-#   Formatação .arff padrão:
-
-    #   @Relation Nome_da_relação
-    #   
-    #   @Attribute A Numeric
-    #   @Attribute B Numeric
-    #   ...
-    #
-    #   @Data
-    #   1.212,5.634,... #imagem 1
-    #   2.323,3.237,... #imagem 2
-    #   ...
-
+#   Escrita no arquivo .csv gerado
 def FileSave(pathToDir, params, logName, totalFiles):
+    
     arquivo = open(logName, "w")
-    arquivo.write("% Caracteristicas extraidas do diretorio /" + pathToDir + "\n\n@RELATION Caracteristicas_Radiomicas\n\n")
-
+    
     index = 1
     for _, _, files in os.walk(pathToDir):
         for file in sorted(files):
@@ -61,21 +49,21 @@ def FileSave(pathToDir, params, logName, totalFiles):
             result = runExtractor(pathToFile, params)
 
             if index != 1:
-                arquivo.write("\n\n% " + file + "\n")
-                dataWriter(arquivo, result)
+                dataWriter(arquivo, result, file)
                 index += 1
 
             else: 
                 i = 0
+                arquivo.write("Nome,")
                 for key, _ in six.iteritems(result):
                     if i < 37:  # 37 primeiros atributos são diagnósticos, e iguais em todas as imagens
                         i += 1
                         continue
-                    arquivo.write("@ATTRIBUTE " + key + "\tNUMERIC\n")
-                arquivo.write("@ATTRIBUTE class\t{sim,nao}\n")  # A classe ("sim" ou "não") é adicionada manualmente em cada imagem após a execução 
-                arquivo.write("\n@DATA")
-                arquivo.write("\n\n% " + file + "\n")
-                dataWriter(arquivo, result)
+                    arquivo.write(str(key)[9:] + ",")
+                
+                # A classe ("sim" ou "não") é adicionada manualmente em cada imagem após a execução
+                arquivo.write("class\n")   
+                dataWriter(arquivo, result, file)
                 index += 1
                 
                 del result
@@ -102,11 +90,12 @@ def addDimension(image):
     volume = tileFilter.Execute(im_vect, im_vect, im_vect)  # "Empilham-se" 3 cópias da imagem para gerar um volume de altura 3
     
     # Caso necessário, este trecho realiza o corte da imagem em dadas coordenadas [x, y, z]
-    # ResHorizontal, ResVertical = imagem.GetWidth(), imagem.GetHeight()
-    # layers = 3
-    # volume = volume[0:ResHorizontal, 0:ResVertical, 0:layers]
+        # ResHorizontal, ResVertical = imagem.GetWidth(), imagem.GetHeight()
+        # layers = 3
+        # volume = volume[0:ResHorizontal, 0:ResVertical, 0:layers]
 
-    sitk.WriteImage(volume, image + '.nrrd')
+    # Salva o volume como .nrrd
+        # sitk.WriteImage(volume, image + '.nrrd')
 
     return volume
 
@@ -123,14 +112,18 @@ def runExtractor(pathToImage, paramsFileName):
     
 
 
-# Registro dos dados de cada nova imagem no arquivo .arff resultante.
-def dataWriter(arquivo, result):
+# Registro dos dados de cada nova imagem no arquivo .csv resultante.
+def dataWriter(arquivo, result, file):
+
+    arquivo.write(str(file) + ",")
+
     i = 0
-    for key, val in six.iteritems(result):
+    for _, val in six.iteritems(result):
         if i < 37:  # 37 primeiros atributos são diagnósticos, e iguais em todas as imagens
             i += 1
             continue
         arquivo.write(str(val) + ',')
+    arquivo.write("\n")
 
 
 
