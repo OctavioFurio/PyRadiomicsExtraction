@@ -1,6 +1,6 @@
 
-# V2.2 - Extração radiomica de imagens .tif
-# 30.01.23
+# V2.3 - Extração radiomica de imagens .tif
+# 31.01.23
 
 import os
 import sys
@@ -10,8 +10,6 @@ import numpy as np
 import SimpleITK as sitk
 import radiomics
 from radiomics import featureextractor
-
-
 
 def main():
     Diretorio, Parametros, Log = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -89,17 +87,27 @@ def FileSave(pathToDir, params, logName, totalFiles):
 
 
 
-def addDimension(image):
+# Adiciona terceira dimensão às imagens e retorna um volume
+def addDimension(image):        
     imagem = sitk.ReadImage(image)
-    layers = 3
 
-    eixo_x, eixo_z = imagem.GetWidth(), imagem.GetHeight()
-    volume = sitk.Image([eixo_x, layers, eixo_z], imagem.GetPixelID())
-
-    for i in range(layers):
-        imagem = sitk.PermuteAxes(sitk.JoinSeries([sitk.ReadImage(image)]),[0,2,1])
-        volume = sitk.Paste(volume, imagem, [eixo_x, 1, eixo_z], [0,0,0], [0,i,0])
+    tileFilter = sitk.TileImageFilter()     # Utiliza-se essa função para unir as imagens em um novo volume
+        
+    tileFilter.SetLayout([1,1,0])           # Layout para unir as imagens no eixo Z, uma sob a outra, permitindo o uso de extratores GLCM
+    tileFilter.SetDefaultPixelValue(128)
     
+    tiff = sitk.ReadImage(image)
+    
+    im_vect = sitk.JoinSeries(tiff)
+    volume = tileFilter.Execute(im_vect, im_vect, im_vect)  # "Empilham-se" 3 cópias da imagem para gerar um volume de altura 3
+    
+    # Caso necessário, este trecho realiza o corte da imagem em dadas coordenadas [x, y, z]
+    # ResHorizontal, ResVertical = imagem.GetWidth(), imagem.GetHeight()
+    # layers = 3
+    # volume = volume[0:ResHorizontal, 0:ResVertical, 0:layers]
+
+    sitk.WriteImage(volume, image + '.nrrd')
+
     return volume
 
 
@@ -110,7 +118,7 @@ def runExtractor(pathToImage, paramsFileName):
 
     params = os.path.join('./', paramsFileName)
     extractor = radiomics.featureextractor.RadiomicsFeatureExtractor(params, additionalInfo=True)
-    
+
     return extractor.execute(volume, volume)
     
 
