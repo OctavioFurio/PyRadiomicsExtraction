@@ -49,7 +49,6 @@ setting:
   padDistance: 10
   preCrop: true
 
-
   # 2D settings
   force2D: true
   force2Ddimension: 0
