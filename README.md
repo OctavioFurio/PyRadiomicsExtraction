@@ -8,6 +8,22 @@ O arquivo resultante por padrão estará no formato .CSV, e será salvo no diret
 
 > {{{/diretório_com_imagens}}}_features.csv
 
+### Funcionamento:
+
+```mermaid
+flowchart TB
+  id1["Diretório"] --Imagens---> Extrator
+  id1["Diretório"] --> Params.yaml
+  
+  subgraph Extrator.py
+  Extrator --addDimension--> Volume
+  Volume & Params.yaml --> PyRadiomics
+  PyRadiomics --> FileSave
+  end
+  
+  FileSave --> Diretório_features.csv
+```
+
 ## Dependências:
 
 - six
