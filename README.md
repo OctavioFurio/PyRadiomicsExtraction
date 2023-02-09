@@ -13,17 +13,27 @@ O arquivo resultante por padrão estará no formato .CSV, e será salvo no diret
 ### Funcionamento:
 
 ```mermaid
+%%{ init: { 'flowchart': { 'curve': 'bump' } } }%%
 flowchart TB
-  id1["Diretório"] --Imagens---> Extrator
-  id1["Diretório"] --> Params.yaml
-  
-  subgraph Extrator.py
-  Extrator --addDimension--> Volume
-  Volume & Params.yaml --> PyRadiomics
-  PyRadiomics --> FileSave
-  end
-  
-  FileSave --> Diretório_features.csv
+
+    inputs[[Execução]]
+
+    inputs -.-> dir[(Diretório com imagens)]
+    inputs .-> add{{Parâmetros}}
+    inputs -. Dados adicionais .-> br([Brilho & Contraste])   
+    dir --> pp{{Pré-Processamento}}
+    add ---> pr([PyRadiomics])
+    br --> pp
+
+    subgraph extrator.py
+        pp == Imagens Tratadas ==> dim(Volumetrização)
+        dim == Novo Volume ==> pr    
+    end
+    
+    subgraph Resultados
+    pr -- Características extraídas --> Diretório_features.csv
+    pr -. Dados Diagnósticos .-> log_Diretório.txt
+    end
 ```
 
 ## Pré-processamento
