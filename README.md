@@ -60,6 +60,8 @@ Exemplos:
 
 - six
 - gc
+- datetime
+- timeit
 - radiomics
 - numpy
 - pandas
