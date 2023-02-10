@@ -49,13 +49,15 @@ setting:
   padDistance: 10
   preCrop: true
 
+
   # 2D settings
+  # Assegura-se de não usar diversas camadas simultaneamente, evitando erros na GLCM
   force2D: true
   force2Ddimension: 0
   
+  # Image discretization:
   # Temporário -> Deve ser substituido de acordo com a firstorder range das imagens, em especial no intervalo 30-130.
-  binWidth: 5
+  binWidth: 50
 
   # Misc:
   voxelArrayShift: 300
-  label: 100
