@@ -36,8 +36,10 @@ flowchart TB
     
     subgraph Resultados
     pr -- Características extraídas --> Diretório_features.csv
-    pr -. Dados Diagnósticos .-> log_Diretório.txt
+    log_Diretório.txt
     end
+    
+    extrator.py -. Dados Diagnósticos .-> log_Diretório.txt
 ```
 
 ## Pré-processamento
