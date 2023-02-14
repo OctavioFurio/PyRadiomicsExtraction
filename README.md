@@ -44,14 +44,15 @@ flowchart TB
 
 ## Pré-processamento
 
-É possível, se necessário, alterar significativamente o Brilho e Contraste das imagens, registrando-se no ato da execução os valores a serem utilizados pelo programa, dado que estejam respectivamente no intervalo [-100, 100] e [0, 100].
+É possível, se necessário, alterar significativamente o Brilho e Contraste das imagens, registrando-se no ato da execução os valores a serem utilizados pelo programa.
+É recomendado que estejam no intervalo [-100, 100], para evitar um comportamento destrutivo do pré-processamento nas imagens.
 
     python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste)
 
 O ajuste desses parâmetros alterará **todas** as imagens do diretório durante a extração.
 Recomenda-se a alteração destes parâmetros vide testes com as imagens.
 
-Exemplos:
+Seguem imagens com diferentes níveis de cada parâmetro:
 
 |  Parâmetro  |     -100     |     -50     |     0     |     50     | 100         |
 |:------:|:------------:|:-----------:|:---------:|:----------:|-------------|
