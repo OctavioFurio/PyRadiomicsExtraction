@@ -2,10 +2,10 @@
 
 ## Sumário:
 
-- [Execução](https://github.com/OctavioFurio/PyRadiomicsExtraction/main/README.md#execu%C3%A7%C3%A3o)
-- [Funcionamento](https://github.com/OctavioFurio/PyRadiomicsExtraction/main/README.md#funcionamento)
-- [Pré-Processamento](https://github.com/OctavioFurio/PyRadiomicsExtraction/main/README.md#pr%C3%A9-processamento)
-- [Dependências](https://github.com/OctavioFurio/PyRadiomicsExtraction/main/README.md#depend%C3%AAncias)
+- [Execução](https://github.com/OctavioFurio/PyRadiomicsExtraction#execu%C3%A7%C3%A3o)
+- [Funcionamento](https://github.com/OctavioFurio/PyRadiomicsExtraction#funcionamento)
+- [Pré-Processamento](https://github.com/OctavioFurio/PyRadiomicsExtraction#pr%C3%A9-processamento)
+- [Dependências](https://github.com/OctavioFurio/PyRadiomicsExtraction#depend%C3%AAncias)
 
 ### Execução:
 
