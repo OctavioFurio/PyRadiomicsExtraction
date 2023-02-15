@@ -1,5 +1,14 @@
 # PyRadiomicsExtraction
 
+## Sumário:
+
+- [Execução](https://github.com/OctavioFurio/PyRadiomicsExtraction/edit/main/README.md#execu%C3%A7%C3%A3o)
+- [Funcionamento](https://github.com/OctavioFurio/PyRadiomicsExtraction/edit/main/README.md#funcionamento)
+- [Pré-Processamento](https://github.com/OctavioFurio/PyRadiomicsExtraction/edit/main/README.md#pr%C3%A9-processamento)
+- [Dependências](https://github.com/OctavioFurio/PyRadiomicsExtraction/edit/main/README.md#depend%C3%AAncias)
+
+### Execução:
+
 Execução via terminal:
 
     python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste)
@@ -42,7 +51,7 @@ flowchart TB
     extrator.py -. Dados Diagnósticos .-> log_Diretório.txt
 ```
 
-## Pré-processamento
+### Pré-processamento
 
 É possível, se necessário, alterar significativamente o Brilho e Contraste das imagens, registrando-se no ato da execução os valores a serem utilizados pelo programa.
 É recomendado que estejam no intervalo [-100, 100], para evitar um comportamento destrutivo do pré-processamento nas imagens.
@@ -63,11 +72,12 @@ Seguem imagens com diferentes níveis de cada parâmetro:
 | Contraste | ![C0B0](https://user-images.githubusercontent.com/103672525/217923328-aad5bcb3-bdde-485d-85d8-7701ff2f6bd7.jpg) | ![C50B0](https://user-images.githubusercontent.com/103672525/217922969-fbee820d-0aa7-42fe-92e5-4d128fd5b0e4.jpg) | ![C100B0](https://user-images.githubusercontent.com/103672525/217922999-3e25d03a-5d80-496f-8aab-7a8d5582fc77.jpg) |
 
 
-## Dependências:
+### Dependências:
 
 - datetime
 - gc
 - numpy
+- OpenCV
 - pandas
 - radiomics
 - SimpleITK
