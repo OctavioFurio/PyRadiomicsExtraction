@@ -1,6 +1,6 @@
 
-# V3.1 - Extração radiomica de imagens .tif
-# 14.02.23
+# V3.1.1 - Extração radiomica de imagens .tif
+# 15.02.23
 
 import os
 import gc
@@ -14,19 +14,55 @@ from datetime import datetime
 from datetime import timedelta
 from timeit import default_timer as timer
 
+
+
+def main():
+    global brilho, contraste
+    Diretorio, Parametros, Log = sys.argv[1], sys.argv[2], sys.argv[1] + "_Features.csv"
+
+    if sys.argv[4: ]:
+        brilho, contraste = (float(sys.argv[3]) / 2) , (float(sys.argv[4]) / 2)
+    else:
+        brilho, contraste = 0.0, 0.0
+
+    print("\n\tDiretorio selecionado:\t%s\n\tParametros:\t\t%s\n\tArquivo .csv:\t\t%s" % (Diretorio, Parametros, Log))
+    
+    count = 0
+    for path in os.scandir(Diretorio):
+        if path.is_file():
+            count += 1
+
+    print('\n\tArquivos encontrados no diretorio: ', count)
+    print("\n\tExtraindo caracteristicas...\n")
+
+    # Um menor valor trará mais informações sobre erros e processos durante a execução
+    radiomics.setVerbosity(20)
+    
+    Começo_da_execução = timer()
+
+    extractionAutomation(Diretorio, Parametros, Log, count)
+
+    Fim_da_execução = timer()
+    tempo_de_execução = timedelta(seconds = Fim_da_execução - Começo_da_execução)
+
+    writeLogFile("Log_" + sys.argv[1] + ".txt", Diretorio, Parametros, tempo_de_execução)
+
 ########## Definição das funções ##########
 
 # Escrita no arquivo .csv gerado
 def extractionAutomation(pathToDir, params, logName, totalFiles):
     arquivo = open(logName, "w")
     
+    print("\t  0 %  -> Inicializado com sucesso\n")
+
     index = 1
     for _, _, files in os.walk(pathToDir):
-        for file in sorted(files):
-            percentage = (int)(100 * (index-1) /(totalFiles))             
+        for file in sorted(files): 
+            print("\n\t%s/%s -> Processando" % (index, totalFiles), file)
 
             pathToFile = pathToDir + "/" + file
             result = runExtractor(pathToFile, params)
+            print("\n\t- Extrator finalizou > %s teve suas caracteristicas extraidas" %(file))
 
             if index != 1:
                 dataWriter(arquivo, result, file)
@@ -49,8 +85,7 @@ def extractionAutomation(pathToDir, params, logName, totalFiles):
                 del result
                 gc.collect
 
-            print("\t%3d %% concluido -> Extraindo caracteristicas de" % (percentage), file)
-    print("\t100 % concluido -> Imagens analisadas com sucesso.")
+
 
 # Pré-processamento, Volumetrização e Execução do extrator
 def runExtractor(pathToImage, paramsFileName):
@@ -60,9 +95,8 @@ def runExtractor(pathToImage, paramsFileName):
     tileFilter.SetDefaultPixelValue(128)
 
     # Leitura da imagem
-    tiff = sitk.ReadImage(pathToImage)
-    imagemOriginal = sitk.GetArrayFromImage(tiff)
-  
+    imagemOriginal = cv2.imread(pathToImage)
+
     # Pré-processamento
     if brilho != 0:
         if brilho > 0:
@@ -77,12 +111,21 @@ def runExtractor(pathToImage, paramsFileName):
         imagemProcessada = imagemOriginal
   
     if contraste != 0:
-        Alpha = float((128 + contraste)) / ((128 - contraste))
-        Gamma = 128 * (1 - Alpha)
+        Alpha = float(131 * (contraste + 127)) / (127 * (131 - contraste))
+        Gamma = 127 * (1 - Alpha)
   
         imagemProcessada = cv2.addWeighted(imagemProcessada, Alpha, imagemProcessada, 0, Gamma)
 
+    # Resolução de overflow
+    hsvImage = cv2.cvtColor(imagemProcessada, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsvImage)
+    v[v >= 255] = 255
+    v[v <= 0] = 0
+    hsvImage = cv2.merge((h, s, v))
+    imagemProcessada = cv2.cvtColor(cv2.cvtColor(hsvImage, cv2.COLOR_HSV2BGR), cv2.COLOR_BGR2GRAY)
+
     imagemProcessada = sitk.GetImageFromArray( np.array(imagemProcessada) )
+    print("\t- Pre-processamento de", str(pathToImage), "concluido")
 
     # Salva imagens pré-processadas, para facilitar testes
     nome = str(pathToImage.split(".")[0].split("/")[1] + "(Brilho " + str(int(brilho * 2)) + " Contraste " + str(int(contraste * 2)) + ").tif")
@@ -91,21 +134,22 @@ def runExtractor(pathToImage, paramsFileName):
     # Volumetrização da imagem pré-processada
     imagemProcessada = sitk.JoinSeries(imagemProcessada)
     volume = tileFilter.Execute(imagemProcessada, imagemProcessada, imagemProcessada)  # "Empilham-se" 3 cópias da imagem para gerar um volume de altura 3
+    
+    # Salva os volumes gerados, para facilitar testes
+    # sitk.WriteImage(volume, nome + '.nrrd')
 
     params = os.path.join('./', paramsFileName)
 
-    # Labeling automatizado, baseado na média de níveis da imagem
-    stats = sitk.StatisticsImageFilter()
-    stats.Execute(volume)
-    label = int(stats.GetMean() + 1)
-
-    # Extração
-    extractor = radiomics.featureextractor.RadiomicsFeatureExtractor(params, label=label, additionalInfo=True)
+    # Extração das características
+    print("\t- Extrator iniciou a extração de", str(pathToImage), "\n\tSeguem dados adicionais:\n")
+    extractor = radiomics.featureextractor.RadiomicsFeatureExtractor(params, label=100, additionalInfo=True)
     return extractor.execute(volume, volume)
     
 # Registro dos dados de cada nova imagem em uma nova linha do arquivo .csv resultante
 def dataWriter(arquivo, result, file):
     arquivo.write(str(file) + ",")
+
+    print("\t- Resultados salvos no .csv com sucesso")
 
     i = 0
     for _, val in six.iteritems(result):
@@ -131,35 +175,5 @@ def writeLogFile(name, dir, params, time):
 
 
 
-########## Main ##########
-
 if __name__ == "__main__":
-    global brilho, contraste
-    Diretorio, Parametros, Log = sys.argv[1], sys.argv[2], sys.argv[1] + "_Features.csv"
-
-    if sys.argv[4: ]:
-        brilho, contraste = (float(sys.argv[3]) / 2) , (float(sys.argv[4]) / 2)
-    else:
-        brilho, contraste = 0.0, 0.0
-
-    print("\n\tDiretorio selecionado:\t%s\n\tParametros:\t\t%s\n\tArquivo .csv:\t\t%s" % (Diretorio, Parametros, Log))
-    
-    count = 0
-    for path in os.scandir(Diretorio):
-        if path.is_file():
-            count += 1
-
-    print('\n\tArquivos encontrados no diretorio: ', count)
-    print("\n\tExtraindo caracteristicas...\n")
-
-    # Um menor valor trará mais informações sobre erros e processos durante a execução
-    radiomics.setVerbosity(30)
-    
-    Começo_da_execução = timer()
-
-    extractionAutomation(Diretorio, Parametros, Log, count)
-
-    Fim_da_execução = timer()
-    tempo_de_execução = timedelta(seconds = Fim_da_execução - Começo_da_execução)
-
-    writeLogFile("Log_" + sys.argv[1] + ".txt", Diretorio, Parametros, tempo_de_execução)
+    main()
