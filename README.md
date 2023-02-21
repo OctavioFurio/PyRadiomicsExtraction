@@ -54,8 +54,6 @@ flowchart LR
 É possível, se necessário, alterar significativamente o Brilho e Contraste das imagens, registrando-se no ato da execução os valores a serem utilizados pelo programa.
 É recomendado que estejam no intervalo [-100, 100], para evitar um comportamento destrutivo do pré-processamento nas imagens.
 
-    python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste)
-
 O ajuste desses parâmetros alterará **todas** as imagens do diretório durante a extração.
 Recomenda-se a alteração destes parâmetros vide testes com as imagens.
 
