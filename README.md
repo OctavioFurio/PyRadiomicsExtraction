@@ -27,7 +27,7 @@ Um arquivo adicional será criado, contendo algumas informações adicionais a r
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'bump' } } }%%
-flowchart LR
+flowchart TB
 
     inputs[[Execução]]
     inputs -.-> dir[(Diretório com imagens)]
