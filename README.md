@@ -11,9 +11,9 @@
 
 Execução via terminal:
 
-    python {{{extrator}}} {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste)
+    python extrator.py {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste) (Label)
     
-*Parâmetros entre parênteses são opcionais, com valores padrão 0 (sem efeitos).
+*Parâmetros entre parênteses são opcionais, com valores padrão 0 e 0 (sem efeitos) para o Brilho e Contraste e 100 (default) para a label.
 
 O arquivo resultante por padrão estará no formato .CSV, e será salvo no diretório onde o extrator for executado, com padrão de nome: 
 
@@ -27,15 +27,13 @@ Um arquivo adicional será criado, contendo algumas informações adicionais a r
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'bump' } } }%%
-flowchart TB
+flowchart LR
 
     inputs[[Execução]]
-
     inputs -.-> dir[(Diretório com imagens)]
-    inputs .-> add{{Parâmetros}}
-    inputs -. Dados adicionais .-> br([Brilho & Contraste])   
+    inputs -. Label & Parâmetros .-> pr([PyRadiomics])
+    inputs -. Dados adicionais .-> br([Brilho & Contraste])
     dir --> pp{{Pré-Processamento}}
-    add ---> pr([PyRadiomics])
     br --> pp
 
     subgraph extrator.py
