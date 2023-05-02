@@ -11,42 +11,30 @@
 
 Execução via terminal:
 
-    python extrator.py {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste) (Label)
+    python extrator.py {{{/diretório_com_imagens}}} {{{parametros}}} (Brilho) (Contraste)
     
-*Parâmetros entre parênteses são opcionais, com valores padrão 0 e 0 (sem efeitos) para o Brilho e Contraste e 100 (default) para a label.
+*Parâmetros entre parênteses são opcionais, com valores padrão 0 e 0 (sem efeitos) para o Brilho e Contraste.
 
 O arquivo resultante por padrão estará no formato .CSV, e será salvo no diretório onde o extrator for executado, com padrão de nome: 
 
 > {{{/diretório_com_imagens}}}_features.csv
-
-Um arquivo adicional será criado, contendo algumas informações adicionais a respeito da extração, com padrão de nome:
-
-> Log_{{{/diretório_com_imagens}}}.txt
 
 ### Funcionamento:
 
 ```mermaid
 %%{ init: { 'flowchart': { 'curve': 'bump' } } }%%
 flowchart TB
-
-    inputs[[Execução]]
-    inputs -.-> dir[(Diretório com imagens)]
-    inputs -. Label & Parâmetros .-> pr([PyRadiomics])
-    inputs -. Dados adicionais .-> br([Brilho & Contraste])
+    dir[(Diretório com imagens)]
+    lbl(Label & Parâmetros) .-> pr([PyRadiomics])
+    br([Brilho & Contraste])
     dir --> pp{{Pré-Processamento}}
     br --> pp
 
-    subgraph extrator.py
-        pp == Imagens Tratadas ==> dim(Volumetrização)
-        dim == Novo Volume ==> pr    
-    end
+    pp == Imagens Tratadas ==> vv(1.000 samples) 
+    vv == Vizinhanças 5x5 ==> dim(Volumetrização)
+    dim == Voxel & Vizinhança ==> pr    
     
-    subgraph Resultados
     pr -- Características extraídas --> Diretório_features.csv
-    log_Diretório.txt
-    end
-    
-    extrator.py -. Dados Diagnósticos .-> log_Diretório.txt
 ```
 
 ### Pré-processamento
@@ -70,12 +58,8 @@ Seguem imagens com diferentes níveis de cada parâmetro:
 
 ### Dependências:
 
-- datetime
-- gc
-- numpy
-- OpenCV
-- pandas
+- six
+- cv2
 - radiomics
 - SimpleITK
-- six
-- timeit
+
