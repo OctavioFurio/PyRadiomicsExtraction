@@ -21,7 +21,7 @@ import SimpleITK as sitk
 def main():
     global brilho, contraste, parametros, diretorio, logName
         
-    diretorio, parametros, logName = sys.argv[1], sys.argv[2], sys.argv[1] + "_Cortes_Features.csv"
+    diretorio, parametros, logName = sys.argv[1], sys.argv[2], sys.argv[1] + "_Features.csv"
 
     # Input de brilho & contraste
     # Se não inicializados, terão valor zero
