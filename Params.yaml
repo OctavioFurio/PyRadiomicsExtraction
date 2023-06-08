@@ -1,5 +1,5 @@
 # Parametros de teste
-# Totalizam 100 extratores, com 37 características diagnósticas (22 de imagem, 15 de máscara)
+# Totalizam 105 extratores, com 37 características diagnósticas (22 de imagem, 15 de máscara) ignoradas.
 
 imageType:
   Original: {}
@@ -35,26 +35,3 @@ featureClass:
   glszm:
   gldm:
   ngtdm:
-
-# Configurações
-setting:
-  # Normalização:
-  normalize: true
-  normalizeScale: 100
-  
-  # Interpolação
-  interpolator: 'sitkBSpline'
-  resampledPixelSpacing: [2, 2, 0]
-  padDistance: 10
-  preCrop: true
-
-  # 2D settings
-  # Assegura-se de não usar diversas camadas simultaneamente, evitando erros na GLCM
-  force2D: true
-  force2Ddimension: 0
-  
-  # Image discretization:
-  binWidth: 50
-
-  # Misc:
-  voxelArrayShift: 300
