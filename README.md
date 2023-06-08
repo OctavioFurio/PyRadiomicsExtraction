@@ -25,14 +25,14 @@ O arquivo resultante por padrão estará no formato .CSV, e será salvo no diret
 %%{ init: { 'flowchart': { 'curve': 'bump' } } }%%
 flowchart TB
     dir[(Diretório com imagens)]
-    lbl(Label & Parâmetros) .-> pr([PyRadiomics])
+    lbl(Parâmetros) .-> pr([PyRadiomics])
     br([Brilho & Contraste])
     dir --> pp{{Pré-Processamento}}
     br --> pp
 
-    pp == Imagens Tratadas ==> vv(1.000 samples) 
-    vv == Vizinhanças 5x5 ==> dim(Volumetrização)
-    dim == Voxel & Vizinhança ==> pr    
+    pp ==> vv(10x10 secções) 
+    vv ==> dim(Volumetrização)
+    dim ==> pr    
     
     pr -- Características extraídas --> Diretório_features.csv
 ```
