@@ -1,4 +1,5 @@
-dados = """
+dados = 
+"""
     -------------------------------------------------------- 
      Automação da biblioteca PyRadiomics para extração de  
      características radiômicas de imagens bidimensionais.
